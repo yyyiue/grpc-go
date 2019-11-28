@@ -42,7 +42,7 @@ type scStateUpdate struct {
 type ccBalancerWrapper struct {
 	cc         *ClientConn
 	balancerMu sync.Mutex // synchronizes calls to the balancer
-	balancer   balancer.Balancer
+	balancer   balancer.Balancer  // *base.baseBalancer 或者 *grpc.pickfirstBalancer
 	scBuffer   *buffer.Unbounded
 	done       *grpcsync.Event
 
@@ -64,6 +64,8 @@ func newCCBalancerWrapper(cc *ClientConn, b balancer.Builder, bopts balancer.Bui
 
 // watcher balancer functions sequentially, so the balancer can be implemented
 // lock-free.
+// 监听 subConn 的变更
+// Client 的常驻后台 goroutine 之一
 func (ccb *ccBalancerWrapper) watcher() {
 	for {
 		select {
@@ -74,9 +76,12 @@ func (ccb *ccBalancerWrapper) watcher() {
 			}
 			ccb.balancerMu.Lock()
 			su := t.(*scStateUpdate)
+			// 更新事件中 subConn 状态
 			if ub, ok := ccb.balancer.(balancer.V2Balancer); ok {
+				// round_robin 等 balancer
 				ub.UpdateSubConnState(su.sc, balancer.SubConnState{ConnectivityState: su.state, ConnectionError: su.err})
 			} else {
+				// pickfirst 等 balancer
 				ccb.balancer.HandleSubConnStateChange(su.sc, su.state)
 			}
 			ccb.balancerMu.Unlock()
@@ -102,6 +107,7 @@ func (ccb *ccBalancerWrapper) close() {
 	ccb.done.Fire()
 }
 
+// SubConn状态变化时调用
 func (ccb *ccBalancerWrapper) handleSubConnStateChange(sc balancer.SubConn, s connectivity.State, err error) {
 	// When updating addresses for a SubConn, if the address in use is not in
 	// the new addresses, the old ac will be tearDown() and a new ac will be
@@ -147,6 +153,7 @@ func (ccb *ccBalancerWrapper) NewSubConn(addrs []resolver.Address, opts balancer
 	if ccb.subConns == nil {
 		return nil, fmt.Errorf("grpc: ClientConn balancer wrapper was closed")
 	}
+	// 新生成一个连接对象
 	ac, err := ccb.cc.newAddrConn(addrs, opts)
 	if err != nil {
 		return nil, err
@@ -264,6 +271,7 @@ func (acbw *acBalancerWrapper) Connect() {
 	acbw.ac.connect()
 }
 
+// 返回 acBalancerWrapper 里的 addrConn
 func (acbw *acBalancerWrapper) getAddrConn() *addrConn {
 	acbw.mu.Lock()
 	defer acbw.mu.Unlock()

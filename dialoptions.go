@@ -555,6 +555,8 @@ func withHealthCheckFunc(f internal.HealthChecker) DialOption {
 	})
 }
 
+// 默认的 dopts，
+// 手动设置基于这个默认的 dopts
 func defaultDialOptions() dialOptions {
 	return dialOptions{
 		disableRetry:    !envconfig.Retry,

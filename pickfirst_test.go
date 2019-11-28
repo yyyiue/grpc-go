@@ -38,7 +38,7 @@ func errorDesc(err error) string {
 	return err.Error()
 }
 
-func (s) TestOneBackendPickfirst(t *testing.T) {
+func (s) Tes1tOneBackendPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 
@@ -104,7 +104,7 @@ func (s) TestBackendsPickfirst(t *testing.T) {
 	t.Fatalf("EmptyCall() = _, %v, want _, %v", err, servers[0].port)
 }
 
-func (s) TestNewAddressWhileBlockingPickfirst(t *testing.T) {
+func (s) Tes1tNewAddressWhileBlockingPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 
@@ -140,7 +140,7 @@ func (s) TestNewAddressWhileBlockingPickfirst(t *testing.T) {
 	wg.Wait()
 }
 
-func (s) TestCloseWithPendingRPCPickfirst(t *testing.T) {
+func (s) Tes1tCloseWithPendingRPCPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 
@@ -176,7 +176,7 @@ func (s) TestCloseWithPendingRPCPickfirst(t *testing.T) {
 	wg.Wait()
 }
 
-func (s) TestOneServerDownPickfirst(t *testing.T) {
+func (s) Tes1tOneServerDownPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 
@@ -217,7 +217,7 @@ func (s) TestOneServerDownPickfirst(t *testing.T) {
 	t.Fatalf("EmptyCall() = _, %v, want _, %v", err, servers[0].port)
 }
 
-func (s) TestAllServersDownPickfirst(t *testing.T) {
+func (s) Tes1tAllServersDownPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 
@@ -260,7 +260,7 @@ func (s) TestAllServersDownPickfirst(t *testing.T) {
 	t.Fatalf("EmptyCall() = _, %v, want _, error with code unavailable", err)
 }
 
-func (s) TestAddressesRemovedPickfirst(t *testing.T) {
+func (s) Tes1tAddressesRemovedPickfirst(t *testing.T) {
 	r, rcleanup := manual.GenerateAndRegisterManualResolver()
 	defer rcleanup()
 

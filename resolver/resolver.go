@@ -179,6 +179,7 @@ type State struct {
 // gRPC to add new methods to this interface.
 type ClientConn interface {
 	// UpdateState updates the state of the ClientConn appropriately.
+	// 核心方法
 	UpdateState(State)
 	// ReportError notifies the ClientConn that the Resolver encountered an
 	// error.  The ClientConn will notify the load balancer and begin calling
@@ -189,6 +190,7 @@ type ClientConn interface {
 	// The address list should be the complete list of resolved addresses.
 	//
 	// Deprecated: Use UpdateState instead.
+	// 废弃，应该使用
 	NewAddress(addresses []Address)
 	// NewServiceConfig is called by resolver to notify ClientConn a new
 	// service config. The service config should be provided as a json string.

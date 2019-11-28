@@ -44,6 +44,8 @@ func init() {
 
 type rrPickerBuilder struct{}
 
+// 重新生成 Picker，
+// readySCs 为状态为 Ready 的连接
 func (*rrPickerBuilder) Build(info base.PickerBuildInfo) balancer.V2Picker {
 	grpclog.Infof("roundrobinPicker: newPicker called with info: %v", info)
 	if len(info.ReadySCs) == 0 {

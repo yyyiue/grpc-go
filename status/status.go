@@ -141,6 +141,10 @@ func FromProto(s *spb.Status) *Status {
 // FromError returns a Status representing err if it was produced from this
 // package or has a method `GRPCStatus() *Status`. Otherwise, ok is false and a
 // Status is returned with codes.Unknown and the original error message.
+// 从 error 返回一个 Status，
+// 前提是 error 是规定的既定 error 之一，
+// 能才 Status 中得到 gRPC code，
+// 其他 error 返回 false
 func FromError(err error) (s *Status, ok bool) {
 	if err == nil {
 		return nil, true
@@ -203,6 +207,7 @@ func Code(err error) codes.Code {
 	if err == nil {
 		return codes.OK
 	}
+	// 使用接口字面量来判断接口是否有 GRPCStatus() 方法
 	if se, ok := err.(interface {
 		GRPCStatus() *Status
 	}); ok {

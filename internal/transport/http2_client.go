@@ -53,6 +53,7 @@ type http2Client struct {
 	ctxDone    <-chan struct{} // Cache the ctx.Done() chan.
 	userAgent  string
 	md         interface{}
+	// Go 中最底层的抽象，代表一个流式网络连接
 	conn       net.Conn // underlying communication channel
 	loopy      *loopyWriter
 	remoteAddr net.Addr
@@ -63,6 +64,8 @@ type http2Client struct {
 	writerDone chan struct{} // sync point to enable testing.
 	// goAway is closed to notify the upper layer (i.e., addrConn.transportMonitor)
 	// that the server sent GoAway on this transport.
+	// 连接断开
+	// 由 Server 发送
 	goAway chan struct{}
 
 	framer *framer

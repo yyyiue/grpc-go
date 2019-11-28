@@ -23,4 +23,5 @@
 // imported directly by users.
 package passthrough
 
+// 执行 passthrough 包的 init()
 import _ "google.golang.org/grpc/internal/resolver/passthrough" // import for side effects after package was moved

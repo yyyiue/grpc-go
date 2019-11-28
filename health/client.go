@@ -71,6 +71,7 @@ retryConnection:
 			return nil
 		}
 		setConnectivityState(connectivity.Connecting, nil)
+		// 建立连接
 		rawS, err := newStream(healthCheckMethod)
 		if err != nil {
 			continue retryConnection
@@ -83,6 +84,7 @@ retryConnection:
 			return fmt.Errorf("newStream returned %v (type %T); want grpc.ClientStream", rawS, rawS)
 		}
 
+		// 发送一个请求
 		if err = s.SendMsg(&healthpb.HealthCheckRequest{Service: service}); err != nil && err != io.EOF {
 			// Stream should have been closed, so we can safely continue to create a new stream.
 			continue retryConnection
@@ -90,6 +92,8 @@ retryConnection:
 		s.CloseSend()
 
 		resp := new(healthpb.HealthCheckResponse)
+		// 一直接收服务端消息，
+		// s.RecvMsg() 返回代表接收到了完整数据（能够序列化为 resp）
 		for {
 			err = s.RecvMsg(resp)
 

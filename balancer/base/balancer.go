@@ -131,6 +131,7 @@ func (b *baseBalancer) UpdateClientConnState(s balancer.ClientConnState) error {
 // from it. The picker is
 //  - errPicker with ErrTransientFailure if the balancer is in TransientFailure,
 //  - built by the pickerBuilder with all READY SubConns otherwise.
+// 重新生成 Picker
 func (b *baseBalancer) regeneratePicker(err error) {
 	if b.state == connectivity.TransientFailure {
 		if b.pickerBuilder != nil {
@@ -205,6 +206,7 @@ func (b *baseBalancer) UpdateSubConnState(sc balancer.SubConn, state balancer.Su
 	//  - this sc became not-ready from ready
 	//  - the aggregated state of balancer became TransientFailure from non-TransientFailure
 	//  - the aggregated state of balancer became non-TransientFailure from TransientFailure
+	// 发生若干情况之一的时候重新生成 Picker，新生成的 Picker 里的 SubConn 均为 Ready 状态
 	if (s == connectivity.Ready) != (oldS == connectivity.Ready) ||
 		(b.state == connectivity.TransientFailure) != (oldAggrState == connectivity.TransientFailure) {
 		b.regeneratePicker(state.ConnectionError)

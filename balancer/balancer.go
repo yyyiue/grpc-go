@@ -351,6 +351,7 @@ type V2Picker interface {
 // HandleSubConnectionStateChange, HandleResolvedAddrs and Close are guaranteed
 // to be called synchronously from the same goroutine.
 // There's no guarantee on picker.Pick, it may be called anytime.
+// 有的 Balancer 实例中存在 picker，比如 baseBalancer 和 lbBalancer
 type Balancer interface {
 	// HandleSubConnStateChange is called by gRPC when the connectivity state
 	// of sc has changed.

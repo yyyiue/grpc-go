@@ -21,6 +21,7 @@
 package manual
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -37,6 +38,7 @@ func NewBuilderWithScheme(scheme string) *Resolver {
 
 // Resolver is also a resolver builder.
 // It's build() function always returns itself.
+// 默认的 Resolver、Builder
 type Resolver struct {
 	// ResolveNowCallback is called when the ResolveNow method is called on the
 	// resolver.  Must not be nil.  Must not be changed after the resolver may
@@ -57,6 +59,7 @@ func (r *Resolver) InitialState(s resolver.State) {
 
 // Build returns itself for Resolver, because it's both a builder and a resolver.
 func (r *Resolver) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
+	fmt.Println("resolver build")
 	r.CC = cc
 	if r.bootstrapState != nil {
 		r.UpdateState(*r.bootstrapState)

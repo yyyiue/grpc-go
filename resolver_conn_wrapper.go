@@ -77,6 +77,9 @@ func parseTarget(target string) (ret resolver.Target) {
 // newCCResolverWrapper uses the resolver.Builder stored in the ClientConn to
 // build a Resolver and returns a ccResolverWrapper object which wraps the
 // newly built resolver.
+// 调用 CC 里的 resolver.Builder.build() 来获取 Resolver，
+// 并将它保存在 ccResolverWrapper 里返回，
+// ccResolverWrapper 里有锁等相关变量
 func newCCResolverWrapper(cc *ClientConn) (*ccResolverWrapper, error) {
 	rb := cc.dopts.resolverBuilder
 	if rb == nil {
@@ -152,6 +155,7 @@ func (ccr *ccResolverWrapper) poll(err error) {
 			ccr.resolveNow(resolver.ResolveNowOptions{})
 			t := time.NewTimer(ccr.cc.dopts.resolveNowBackoff(i))
 			select {
+			// close 后可读出零值
 			case <-p:
 				t.Stop()
 				return

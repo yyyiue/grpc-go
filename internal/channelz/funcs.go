@@ -55,6 +55,12 @@ func TurnOn() {
 }
 
 // IsOn returns whether channelz data collection is on.
+// 通过检查curState的值来判断是否开启，
+// 使用 CompareAndSwapInt32 乐观锁，
+// 这种竞争较少的场景下·
+// 如果调用时 curState 为0，则返回 false
+// 否则将 curState 还是置为1，并返回 true
+// 与 TurnOn() 并发安全
 func IsOn() bool {
 	return atomic.CompareAndSwapInt32(&curState, 1, 1)
 }

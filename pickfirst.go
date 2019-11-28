@@ -30,6 +30,7 @@ import (
 )
 
 // PickFirstBalancerName is the name of the pick_first balancer.
+// 默认的 balancer，可设置为 round_robin 等，不一样的 Pick 方法
 const PickFirstBalancerName = "pick_first"
 
 func newPickfirstBuilder() balancer.Builder {
@@ -150,6 +151,9 @@ type picker struct {
 	err    error
 }
 
+// 一个 SubConn 里有一个连接（addrConn），
+// 一个 addrConn 里有多个地址，
+// addrConn 的 tryAllAddrs 方法会使用这些地址尝试建立连接（体现 pick first）
 func (p *picker) Pick(info balancer.PickInfo) (balancer.PickResult, error) {
 	return p.result, p.err
 }

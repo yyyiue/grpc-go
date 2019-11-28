@@ -28,6 +28,7 @@ import (
 // Event represents a one-time event that may occur in the future.
 type Event struct {
 	fired int32
+	// 核心，通过 close() 来触发事件
 	c     chan struct{}
 	o     sync.Once
 }

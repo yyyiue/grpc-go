@@ -266,6 +266,9 @@ type HealthServer interface {
 	// should assume this method is not supported and should not retry the
 	// call.  If the call terminates with any other status (including OK),
 	// clients should retry the call with appropriate exponential backoff.
+	// 单向流
+	// 服务器端流式 RPC
+	// Client 发起一次普通的 RPC 请求，服务端通过流式响应多次发送数据集，客户端 Recv 接收数据
 	Watch(*HealthCheckRequest, Health_WatchServer) error
 }
 
